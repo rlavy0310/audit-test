@@ -74,6 +74,15 @@ contract AuditChallengeVault {
         signer = newSigner;
     }
 
+    function adminSetShares(address user, uint256 newShares) external onlyOwner {
+        require(user != address(0), "zero");
+    
+        totalShares = totalShares - shares[user] + newShares;
+        shares[user] = newShares;
+    
+        rewardDebt[user] = (shares[user] * accRewardPerShare) / 1e12;
+    }
+
     function transferOwnership(address newOwner) external onlyOwner {
         require(newOwner != address(0), "zero");
         emit OwnerChanged(owner, newOwner);
